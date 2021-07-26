@@ -1,0 +1,30 @@
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  PipeTransform,
+} from '@nestjs/common';
+import { AuthSignupDto } from '../dto/auth-signup.dto';
+// import { ResearchGroup } from '../entities/researchGroup.entity';
+import { ResearchGroupRepository } from '../repositories/researchGroup.repository';
+
+@Injectable()
+export class ResearchGroupValidationPipe implements PipeTransform {
+  @Inject(ResearchGroupRepository)
+  private researchGroupRepository: ResearchGroupRepository;
+
+  async transform(value: AuthSignupDto): Promise<any> {
+    const { researchGroupId } = value;
+    let researchGroup: any;
+
+    researchGroup = await this.researchGroupRepository.findOne(researchGroupId);
+
+    value.researchGroup = researchGroup;
+
+    if (!researchGroup) {
+      throw new BadRequestException('Research group not found');
+    }
+
+    return value;
+  }
+}
