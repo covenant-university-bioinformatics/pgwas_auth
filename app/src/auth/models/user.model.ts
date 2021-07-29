@@ -57,19 +57,19 @@ export class User {
   @Prop()
   emailConfirmed: boolean;
 
-  @Prop({ type: String })
+  @Prop({ type: String, select: false })
   emailConfirmedToken: string;
 
-  @Prop()
+  @Prop({  select: false })
   emailConfirmedTokenExpire: Date;
 
-  @Prop({ type: String })
+  @Prop({ type: String, select: false })
   resetPasswordToken: string;
 
-  @Prop()
+  @Prop({  select: false })
   resetPasswordTokenExpire: Date;
 
-  @Prop()
+  @Prop({  select: false })
   salt: string;
 
   version: string;
@@ -77,7 +77,8 @@ export class User {
   //  custom logic for individual users to run for each user
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);
-
+    console.log(this);
+    console.log(hash);
     return hash === this.password;
   }
 

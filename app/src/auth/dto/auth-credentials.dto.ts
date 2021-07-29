@@ -23,8 +23,8 @@ export class AuthCredentialsDto {
   @IsString()
   @MinLength(4, { message: 'Authentication failed' })
   @MaxLength(20, { message: 'Authentication failed' })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message: 'Authentication failed',
-  })
+  // @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+  //   message: 'Authentication failed',
+  // })
   password: string;
 }

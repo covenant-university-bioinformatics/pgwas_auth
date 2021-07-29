@@ -3,7 +3,7 @@ export const templateHeader = `
   <body style="
     background-color: rgba(202, 199, 199, 0.4);
     overflow: hidden;
-    height: 100%;
+    height: 600px;
     font-size: 16px;
     font-family: sans-serif;
     text-align: center;
@@ -11,7 +11,7 @@ export const templateHeader = `
  <div
  style="margin: 0 auto; width: 400px; height: 100%; background-color: #fff; color: #000;box-shadow: 0 0 3px; " 
  >
-     <div
+<div
 style="text-align: left; height: 30%; border-bottom: 3px solid #e91e6361; padding: 20px 40px
         "
      >

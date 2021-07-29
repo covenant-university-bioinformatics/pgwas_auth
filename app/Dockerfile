@@ -14,7 +14,7 @@ COPY yarn.lock ./
 #RUN npm config set https-proxy null
 #RUN npm config set registry http://registry.npmjs.org/
 
-RUN yarn add @nestjs/cli --verbose
+# RUN yarn add @nestjs/cli --verbose
 
 RUN yarn install
 

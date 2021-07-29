@@ -64,11 +64,6 @@ environment:
       secretKeyRef:
         name: jwt-secret
         key: JWT_KEY
-  - name: MONGO_HOST
-    valueFrom:
-      configMapKeyRef:
-        name: authmongo-configmap
-        key: database_url
   - name: MONGODB_USER
     valueFrom:
       secretKeyRef:
@@ -79,20 +74,25 @@ environment:
       secretKeyRef:
         name: mongo-secret
         key: mongo-root-password
+  - name: MONGO_HOST
+    valueFrom:
+      configMapKeyRef:
+        name: pgwasmongo-configmap
+        key: database_url
   - name: MONGODB_NAME
     valueFrom:
       secretKeyRef:
         name: mongo-secret
-        key: mongo-auth-db
+        key: mongo-annot-db
   - name: MONGODB_PODNAME
-    value: auth-mongo
+    value: pgwas-mongo
 
 dbConfigMap: false
 eventConfigMap: false
 redisConfigMap: false
 
 volumes:
-  enabled: true
+  enabled: false
   pvc:
     enabled: false
     existing_claim:
@@ -111,9 +111,9 @@ volumes:
 #          hello
 
 fileConfigMap:
-  - name: mongofile
-    volumeName: mdb
-    mountPath: /etc/config
+  # - name: mongofile
+  #   volumeName: mdb
+  #   mountPath: /etc/config
 
 ## Configure Ingress based on the documentation here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ##
