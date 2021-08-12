@@ -23,5 +23,5 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - run: doctl kubernetes cluster kubeconfig save k8s-1-21-2-do-2-fra-pgwas
-      - run: helm upgrade auth ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasauth:latest --values=./dev_depl/helm/auth-values.yaml
-      - run: helm upgrade email ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasemail:latest --values=./dev_depl/helm/email-values.yaml
+      - run: helm upgrade auth ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasauth --values=./dev_depl/helm/auth-values.yaml
+      - run: helm upgrade email ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasemail --values=./dev_depl/helm/email-values.yaml
