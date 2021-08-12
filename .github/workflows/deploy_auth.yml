@@ -1,0 +1,27 @@
+name: deploy-auth
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd app && docker build -t cubrenig/pgwasauth .
+      - run: cd email && docker build -t cubrenig/pgwasemail .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push cubrenig/pgwasauth
+      - run: docker push cubrenig/pgwasemail
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - run: doctl kubernetes cluster kubeconfig save k8s-1-21-2-do-2-fra-pgwas
+      - run: helm upgrade auth .\dev_depl\helm\ --install --wait --atomic --set image=cubrenig/pgwasauth --values=.\dev_depl\helm\auth-values.yaml
+      - run: helm upgrade email .\dev_depl\helm\ --install --wait --atomic --set image=cubrenig/pgwasemail --values=.\dev_depl\helm\email-values.yaml
