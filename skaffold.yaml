@@ -4,20 +4,20 @@ deploy:
   helm:
     releases:
       - name: nats
-        chartPath: .\infra\helm\
+        chartPath: .\dev_depl\helm\
         valuesFiles:
-          - .\infra\helm\nats-values.yaml
+          - .\dev_depl\helm\nats-values.yaml
       - name: auth
-        chartPath: .\infra\helm\
+        chartPath: .\dev_depl\helm\
         valuesFiles:
-          - .\infra\helm\auth-values.yaml
+          - .\dev_depl\helm\auth-values.yaml
         artifactOverrides:
           image: cubrenig/pgwasauth
         setValues:
       - name: email
-        chartPath: .\infra\helm\
+        chartPath: .\dev_depl\helm\
         valuesFiles:
-          - .\infra\helm\email-values.yaml
+          - .\dev_depl\helm\email-values.yaml
         artifactOverrides:
           image: cubrenig/pgwasemail
 
@@ -27,7 +27,7 @@ build:
     concurrency: 5
   artifacts:
     - image: cubrenig/pgwasauth
-      context: auth_service #folder
+      context: app
       docker:
         dockerfile: Dockerfile
       sync:
@@ -35,7 +35,7 @@ build:
           - src: "src/**/*.ts"
             dest: .
     - image: cubrenig/pgwasemail
-      context: email_service
+      context: email
       docker:
         dockerfile: Dockerfile
       sync:

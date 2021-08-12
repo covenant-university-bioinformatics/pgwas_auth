@@ -17,7 +17,7 @@ import { NatsModule } from '../nats/nats.module';
     JwtModule.register({
       secret: process.env.JWT_KEY,
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: 60 * 60 * 24 * 7,
       },
     }),
     // Allow the injection of model in service

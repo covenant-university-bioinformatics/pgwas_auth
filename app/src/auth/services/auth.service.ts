@@ -81,9 +81,7 @@ export class AuthService {
     } catch (e) {
       console.log(e);
       if (e.code === 11000) {
-        throw new ConflictException(
-          'Username/Email already exists: ' + e.message,
-        );
+        throw new ConflictException('Username/Email already exists: ');
       }
       await session.abortTransaction();
       throw new HttpException(e.message, 400);
@@ -94,7 +92,7 @@ export class AuthService {
 
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  ) {
     let user;
 
     if (authCredentialsDto.username) {
@@ -102,7 +100,8 @@ export class AuthService {
         .findOne({
           username: authCredentialsDto.username,
         })
-        .select('+password');
+        .select('+password')
+        .select('+salt');
     }
 
     if (authCredentialsDto.email) {
@@ -132,8 +131,11 @@ export class AuthService {
     const payload: JwtPayload = { username: user.username }; //can add other information like roles, emails, but no sensitive info
     //constructs jwt with header,payload and signature
     const accessToken = this.jwtService.sign(payload);
+
+    user.password = null;
+    user.salt = null;
     //send to client
-    return { accessToken };
+    return { user, accessToken };
   }
 
   async confirmEmail(emailConfirmDto: EmailConfirmDto): Promise<boolean> {

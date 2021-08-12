@@ -31,9 +31,6 @@ export class AuthController {
     @Body(ValidationPipe)
     authRegisterDto: AuthRegisterDto,
   ) {
-    this.logger.verbose(
-      `A new signup request, user details: ${JSON.stringify(authRegisterDto)}`,
-    );
     return this.authService.signUp(authRegisterDto);
   }
 
@@ -42,17 +39,16 @@ export class AuthController {
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
     @Res() res: Response,
   ) {
-    this.logger.verbose(
-      `A new sign in request, user details: ${JSON.stringify(
-        authCredentialsDto,
-      )}`,
+
+    const { user, accessToken: token } = await this.authService.signIn(
+      authCredentialsDto,
     );
 
-    const token = await this.authService.signIn(authCredentialsDto);
+    const expiresIn = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000); //7 days
 
     //cookie options
     const options: { expires: Date; httpOnly: boolean; secure?: boolean } = {
-      expires: new Date(Date.now() + 3600000), //1hr
+      expires: expiresIn,
       httpOnly: true,
     };
 
@@ -62,8 +58,8 @@ export class AuthController {
 
     res
       .status(200)
-      .cookie('accessToken', token.accessToken, options)
-      .json(token);
+      .cookie('accessToken', token, options)
+      .json({ user, expiresIn });
   }
 
   @Get('/emailconfirm/:email/:token')
@@ -73,7 +69,9 @@ export class AuthController {
       res
         .status(200)
         .send(
-          generalTemplate('<strong>Email confirmation successful</strong>'),
+          generalTemplate(
+            '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://pgwas.dev/sign_in">here</a></strong>',
+          ),
         );
     } else {
       res.status(400).send(
@@ -89,11 +87,6 @@ export class AuthController {
   async forgotPassword(
     @Body(ValidationPipe) authResetPasswordEmailDto: AuthResetPasswordEmailDto,
   ) {
-    this.logger.verbose(
-      `A request password reset, user details: ${JSON.stringify(
-        authResetPasswordEmailDto,
-      )}`,
-    );
 
     return await this.authService.forgotPassword(authResetPasswordEmailDto);
   }
@@ -114,11 +107,6 @@ export class AuthController {
     @Body(ValidationPipe) authChangePasswordDto: AuthChangePasswordDto,
     @GetUser() user,
   ) {
-    this.logger.verbose(
-      `A request password change, user details: ${JSON.stringify(
-        authChangePasswordDto,
-      )}`,
-    );
 
     return await this.authService.updatePassword(authChangePasswordDto, user);
   }
@@ -126,5 +114,17 @@ export class AuthController {
   @Post('/test')
   test(@GetUser() user) {
     console.log(user);
+  }
+
+  @Get('/logout')
+  logout(@Res() res: Response) {
+    console.log('sign out');
+    res
+      .status(200)
+      .cookie('accessToken', 'none', {
+        expires: new Date(Date.now() + 1000),
+        httpOnly: true,
+      })
+      .json({ success: true });
   }
 }

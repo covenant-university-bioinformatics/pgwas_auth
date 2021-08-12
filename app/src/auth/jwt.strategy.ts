@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
     super({
       jwtFromRequest: cookieExtractor,
-      secretOrKey: process.env.JWT_KEY || 'test101',
+      secretOrKey: process.env.JWT_KEY,
     });
     this.logger = new Logger();
   }
