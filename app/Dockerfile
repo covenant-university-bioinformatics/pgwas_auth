@@ -1,7 +1,7 @@
 FROM node:14.16.1-alpine3.12
 
 ENV CI=true
-ENV NODE_ENV=production
+
 
 WORKDIR /app
 
@@ -14,5 +14,7 @@ RUN npm install
 COPY ./ ./
 
 RUN npm run build
+
+ENV NODE_ENV=production
 
 CMD [ "npm", "run", "start" ]
