@@ -7,14 +7,12 @@ WORKDIR /app
 
 COPY package.json ./
 
-COPY yarn.lock ./
-
 RUN npm install -g @nestjs/cli
 
-RUN yarn install
+RUN npm install
 
 COPY ./ ./
 
-RUN yarn run build
+RUN npm run build
 
-CMD [ "yarn", "run", "start" ]
+CMD [ "npm", "run", "start" ]
