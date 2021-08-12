@@ -83,7 +83,7 @@ environment:
     valueFrom:
       secretKeyRef:
         name: mongo-secret
-        key: mongo-annot-db
+        key: mongo-auth-db
   - name: MONGODB_PODNAME
     value: pgwas-mongo
 
@@ -126,10 +126,10 @@ ingress:
 resources:
   limits:
     cpu: 1
-    memory: 2000Mi
-  requests:
-    cpu: 500m
     memory: 500Mi
+  requests:
+    cpu: 300m
+    memory: 300Mi
 
 enableInitContainers: false
 initContainers:
