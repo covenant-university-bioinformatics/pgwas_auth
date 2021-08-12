@@ -31,9 +31,6 @@ export class AuthController {
     @Body(ValidationPipe)
     authRegisterDto: AuthRegisterDto,
   ) {
-    this.logger.verbose(
-      `A new signup request, user details: ${JSON.stringify(authRegisterDto)}`,
-    );
     return this.authService.signUp(authRegisterDto);
   }
 
@@ -42,11 +39,6 @@ export class AuthController {
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
     @Res() res: Response,
   ) {
-    this.logger.verbose(
-      `A new sign in request, user details: ${JSON.stringify(
-        authCredentialsDto,
-      )}`,
-    );
 
     const { user, accessToken: token } = await this.authService.signIn(
       authCredentialsDto,
@@ -95,11 +87,6 @@ export class AuthController {
   async forgotPassword(
     @Body(ValidationPipe) authResetPasswordEmailDto: AuthResetPasswordEmailDto,
   ) {
-    this.logger.verbose(
-      `A request password reset, user details: ${JSON.stringify(
-        authResetPasswordEmailDto,
-      )}`,
-    );
 
     return await this.authService.forgotPassword(authResetPasswordEmailDto);
   }
@@ -120,11 +107,6 @@ export class AuthController {
     @Body(ValidationPipe) authChangePasswordDto: AuthChangePasswordDto,
     @GetUser() user,
   ) {
-    this.logger.verbose(
-      `A request password change, user details: ${JSON.stringify(
-        authChangePasswordDto,
-      )}`,
-    );
 
     return await this.authService.updatePassword(authChangePasswordDto, user);
   }
