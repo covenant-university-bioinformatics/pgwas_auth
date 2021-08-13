@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd app && docker build -t cubrenig/pgwasauth .
-      - run: cd email && docker build -t cubrenig/pgwasemail .
+      - run: cd app && docker build -t cubrenig/pgwasauth:latest -t cubrenig/pgwasauth:$GITHUB_SHA .
+      - run: cd email && docker build -t cubrenig/pgwasemail:latest -t cubrenig/pgwasemail:$GITHUB_SHA .
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -23,5 +23,5 @@ jobs:
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       - run: doctl kubernetes cluster kubeconfig save k8s-1-21-2-do-2-fra-pgwas
-      - run: helm upgrade auth ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasauth --values=./dev_depl/helm/auth-values.yaml
-      - run: helm upgrade email ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasemail --values=./dev_depl/helm/email-values.yaml
+      - run: helm upgrade auth ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasauth:$GITHUB_SHA --values=./dev_depl/helm/auth-values.yaml
+      - run: helm upgrade email ./dev_depl/helm/ --install --wait --atomic --set image=cubrenig/pgwasemail:$GITHUB_SHA --values=./dev_depl/helm/email-values.yaml
