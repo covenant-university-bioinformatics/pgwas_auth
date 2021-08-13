@@ -18,7 +18,7 @@ export class Mailer extends NodeMailgun {
   async sendEmail(
     emailPayload: EmailFormat,
     protocol: string = "https",
-    host: string = "pgwas.dev"
+    host: string = "www.spgwas.waslitbre.org"
   ) {
     const { type, recipient, payload } = emailPayload;
     let body = "Test 123";
