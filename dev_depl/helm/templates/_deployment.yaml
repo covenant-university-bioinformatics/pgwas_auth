@@ -16,6 +16,7 @@ metadata:
     helm.sh/chart: {{ include "microservice.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    timestamp: {{ now | unixEpoch | quote }}
 spec:
   replicas: {{ .Values.replicaCount | default .Values.global.replicaCount }}
   selector:
