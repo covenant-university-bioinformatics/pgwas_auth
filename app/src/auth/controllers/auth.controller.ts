@@ -70,7 +70,7 @@ export class AuthController {
         .status(200)
         .send(
           generalTemplate(
-            '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://pgwas.dev/sign_in">here</a></strong>',
+            '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>',
           ),
         );
     } else {
