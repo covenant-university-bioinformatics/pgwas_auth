@@ -57,7 +57,18 @@ args:
   - "-SD"
   - "-cid"
   - "pgwas-internal"
-
+  - "-store"
+  - "file"
+  - "-dir"
+  - "/db/datastore"
+  - "-mc"
+  - "0"
+  - "-msu"
+  - "0"
+  - "-mm"
+  - "0"
+  - "-mb"
+  - "0"
 
 # List of services
 services:
@@ -79,14 +90,14 @@ eventConfigMap: true
 redisConfigMap: false
 
 volumes:
-  enabled: false
+  enabled: true
   pvc:
-    enabled: false
+    enabled: true
     existing_claim:
-    name: pvc
-    mountPath: /pv
-    size: 1G
-    class:
+    name: nats-pvc
+    mountPath: /db/datastore
+    size: 2G
+    class: hostpath
     accessModes:
       - ReadWriteOnce
 
@@ -105,10 +116,10 @@ ingress:
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
-#resources:
-#  limits:
-#    cpu: 1
-#    memory: 2000Mi
-#  requests:
-#    cpu: 500m
-#    memory: 500Mi
+resources:
+  limits:
+    cpu: 1
+    memory: 2000Mi
+  requests:
+    cpu: 400m
+    memory: 2000Mi

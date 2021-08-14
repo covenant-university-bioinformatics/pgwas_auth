@@ -138,10 +138,9 @@ export class AuthService {
     return { user, accessToken };
   }
 
-  async confirmEmail(emailConfirmDto: EmailConfirmDto): Promise<boolean> {
+  async confirmEmail(emailConfirmDto: EmailConfirmDto): Promise<boolean | string> {
     const session = await this.userModel.startSession();
     session.startTransaction();
-
     try {
       const opts = { session };
       const { email, token } = emailConfirmDto;
@@ -154,7 +153,9 @@ export class AuthService {
         throw new BadRequestException('User not found');
       }
 
-      if (notVerifiedUser?.emailConfirmed) return true;
+      if (notVerifiedUser.emailConfirmed) {
+        return 'Email already confirmed';
+      }
 
       const hash = crypto.createHash('sha256').update(token).digest('hex');
 

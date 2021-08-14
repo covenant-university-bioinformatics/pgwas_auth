@@ -29,7 +29,7 @@ build:
     - image: cubrenig/pgwasauth
       context: app
       docker:
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile.dev
       sync:
         manual:
           - src: "src/**/*.ts"
@@ -37,7 +37,7 @@ build:
     - image: cubrenig/pgwasemail
       context: email
       docker:
-        dockerfile: Dockerfile
+        dockerfile: Dockerfile.dev
       sync:
         manual:
           - src: "src/**/*.ts"

@@ -65,21 +65,32 @@ export class AuthController {
   @Get('/emailconfirm/:email/:token')
   async emailConfirm(@Param() emailConfirmDto: EmailConfirmDto, @Res() res) {
     const value = await this.authService.confirmEmail(emailConfirmDto);
-    if (value) {
+    if(typeof value === "string"){
       res
-        .status(200)
-        .send(
-          generalTemplate(
-            '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>',
-          ),
-        );
-    } else {
-      res.status(400).send(
-        generalTemplate(`<strong>Email confirmation not successful!<br> User with email: ${emailConfirmDto.email} has been deleted<br>
+          .status(200)
+          .send(
+              generalTemplate(
+                  `<strong>${value}</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>`,
+              ),
+          );
+    }
+    else{
+      if (value) {
+        res
+            .status(200)
+            .send(
+                generalTemplate(
+                    '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>',
+                ),
+            );
+      } else {
+        res.status(400).send(
+            generalTemplate(`<strong>Email confirmation not successful!<br> User with email: ${emailConfirmDto.email} has been deleted<br>
       If this is truly your email, please re-register and confirm the email as soon as possible.<br>
       Thank you for your patience!</strong>
   `),
-      );
+        );
+      }
     }
   }
 

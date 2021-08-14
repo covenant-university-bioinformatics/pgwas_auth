@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev --rs --poll src/index.ts"
+    "start": "ts-node-dev --rs --poll src/index.ts",
+    "start:prod": "NODE_ENV=production ts-node src/index.ts"
   },
   "keywords": [],
   "author": "",
