@@ -126,10 +126,10 @@ ingress:
 resources:
   limits:
     cpu: 1
-    memory: 500Mi
+    memory: 2000Mi
   requests:
-    cpu: 300m
-    memory: 300Mi
+    cpu: 500m
+    memory: 2000Mi
 
 enableInitContainers: false
 initContainers:

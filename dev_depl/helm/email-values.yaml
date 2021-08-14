@@ -17,7 +17,7 @@ image: skafoldcfg
 imageConfig:
   repository:
   tag: "latest"
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 #command: ['echo pre-install Job Pod is Running']
 
@@ -120,10 +120,10 @@ ingress:
 resources:
   limits:
     cpu: 1
-    memory: 500Mi
+    memory: 2000Mi
   requests:
-    cpu: 300m
-    memory: 300Mi
+    cpu: 500m
+    memory: 1500Mi
 
 enableInitContainers: false
 initContainers:

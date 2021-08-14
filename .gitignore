@@ -2,6 +2,9 @@
 dist
 node_modules
 *secret*
+
+dev_depl/helm/nats-values.yaml
+
 # Logs
 logs
 *.log
