@@ -55,7 +55,6 @@ export class AuthController {
     if (process.env.NODE_ENV === 'production') {
       options.secure = true;
       options.sameSite = "none";
-      options.domain = "spgwas.waslitbre.org"
     }
 
     res
