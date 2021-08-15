@@ -9,7 +9,7 @@ import {
   Res,
   ValidationPipe,
 } from '@nestjs/common';
-import { Response } from 'express';
+import {CookieOptions, Response} from 'express';
 import { AuthRegisterDto } from '../dto/auth-register.dto';
 import { AuthService } from '../services/auth.service';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
@@ -47,20 +47,21 @@ export class AuthController {
     const expiresIn = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000); //7 days
 
     //cookie options
-    const options: { expires: Date; httpOnly: boolean; secure?: boolean, sameSite?: boolean | "none" | "lax" | "strict"} = {
+    const options: CookieOptions = {
       expires: expiresIn,
       httpOnly: true,
     };
 
     if (process.env.NODE_ENV === 'production') {
       options.secure = true;
-      options.sameSite = "none"
+      options.sameSite = "none";
+      options.domain = "spgwas.waslitbre.org"
     }
 
     res
       .status(200)
       .cookie('accessToken', token, options)
-      .json({ user, expiresIn });
+      .json({ user, expiresIn, accessToken: token });
   }
 
   @Get('/emailconfirm/:email/:token')
