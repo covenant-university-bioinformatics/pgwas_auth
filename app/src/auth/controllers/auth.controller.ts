@@ -47,14 +47,14 @@ export class AuthController {
     const expiresIn = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000); //7 days
 
     //cookie options
-    const options: { expires: Date; httpOnly: boolean; secure?: boolean, SameSite?: string} = {
+    const options: { expires: Date; httpOnly: boolean; secure?: boolean, sameSite?: boolean | "none" | "lax" | "strict"} = {
       expires: expiresIn,
       httpOnly: true,
     };
 
     if (process.env.NODE_ENV === 'production') {
       options.secure = true;
-      options.SameSite = 'None'
+      options.sameSite = "none"
     }
 
     res
