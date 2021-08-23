@@ -43,13 +43,14 @@ export class Mailer extends NodeMailgun {
         break;
       case "jobStatus":
         body = jobStatusTemplate({
-          username: payload.username,
-          status: payload.status!,
-          comments: payload.comments!,
-          jobID: payload.jobID!,
-          jobName: payload.jobName!,
+          username: payload?.username,
+          status: payload?.status!,
+          comments: payload?.comments!,
+          jobID: payload?.jobID!,
+          jobName: payload?.jobName!,
+          link: `${protocol}://${host}/${payload?.link!}`
         });
-        subject = `${payload.jobName}, job status`;
+        subject = `Status of your job: ${payload.jobName}`;
         break;
       // case "informAdmin":
       //   body = informAdminTemplate(payload);
