@@ -118,12 +118,12 @@ ingress:
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
-  limits:
-    cpu: 300m
-    memory: 600Mi
-  requests:
-    cpu: 300m
-    memory: 600Mi
+#  limits:
+#    cpu: 300m
+#    memory: 600Mi
+#  requests:
+#    cpu: 300m
+#    memory: 600Mi
 
 enableInitContainers: false
 initContainers:
