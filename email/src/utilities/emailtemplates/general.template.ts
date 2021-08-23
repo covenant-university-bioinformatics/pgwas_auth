@@ -6,7 +6,7 @@ export const templateHeader = `
     height: 100%;
     font-size: 16px;
     font-family: sans-serif;
-    text-align: center;
+    text-align: justify;
     display: flex;
     justify-content: center;
     align-items: center;

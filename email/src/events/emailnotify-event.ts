@@ -22,6 +22,7 @@ export type EmailFormat = {
     comments?: string;
     jobID?: string;
     jobName?: string;
+    link?: string;
   };
 };
 export interface EmailNotifyEvent {
