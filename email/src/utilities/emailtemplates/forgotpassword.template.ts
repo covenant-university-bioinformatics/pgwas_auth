@@ -1,10 +1,13 @@
 import { templateFooter, templateHeader } from "./general.template";
 
-export const newUserTemplate = (data: { username: string; link: string }) => {
+export const forgotPasswordTemplate = (data: {
+  username: string;
+  link: string;
+}) => {
   return `
     ${templateHeader}
         <h3>Please do NOT reply</h3>
-        <p>Thank you ${data.username} for your registration, please kindly verify your email by clicking the button below</p>        
+        <p>Hello ${data.username}, you are receiving this email because you have made a request to reset your password. Please click the button below to reset your password</p>        
         <a
          style="
             padding: 10px;
@@ -14,7 +17,7 @@ export const newUserTemplate = (data: { username: string; link: string }) => {
             cursor: pointer;
             display: inline-block;
          "
-         href="${data.link}">Verify email</a>
+         href="${data.link}">Reset Password</a>
     ${templateFooter}
   `;
 };

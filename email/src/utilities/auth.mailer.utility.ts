@@ -2,6 +2,7 @@ import { NodeMailgun } from "ts-mailgun";
 import { newUserTemplate } from "./emailtemplates/newuser.template";
 import { EmailFormat } from "../events/emailnotify-event";
 import { jobStatusTemplate } from "./emailtemplates/jobstatus.template";
+import {forgotPasswordTemplate} from "./emailtemplates/forgotpassword.template";
 
 export class Mailer extends NodeMailgun {
   private static apiKey = process.env.MAILGUN_KEY;
@@ -22,7 +23,7 @@ export class Mailer extends NodeMailgun {
     const { type, recipient, payload } = emailPayload;
     let host = "pgwas.dev";
     if (process.env.NODE_ENV === 'production') {
-      host = "www.spgwas.waslitbre.org";
+      host = "spgwas.waslitbre.org";
     }
     let body = "Test 123";
     let subject = "";
@@ -52,10 +53,13 @@ export class Mailer extends NodeMailgun {
         });
         subject = `Status of your job: ${payload.jobName}`;
         break;
-      // case "informAdmin":
-      //   body = informAdminTemplate(payload);
-      //   subject = `Registration: ${payload.initials} ${payload.lastname} has been registered by admin`;
-      //   break;
+      case "forgotPassword":
+        body = forgotPasswordTemplate({
+          username: payload?.username,
+          link: `${protocol}://${host}/resetpassword/${payload.token}`,
+        });
+        subject = `Reset password email`;
+        break;
       // case "approvedUser":
       //   body = approvedPersonnelTemplate(payload);
       //   subject = `Hello ${payload.initials} ${payload.lastname}, your profile has been approved`;

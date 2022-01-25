@@ -39,7 +39,6 @@ export class AuthController {
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
     @Res() res: Response,
   ) {
-
     const { user, accessToken: token } = await this.authService.signIn(
       authCredentialsDto,
     );
