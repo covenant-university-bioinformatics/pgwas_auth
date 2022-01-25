@@ -35,7 +35,7 @@ export const templateFooter = `
     </div>
  <div  style="height: 30%; padding: 20px 60px; text-align: center;
         ">
-     <p>Copyright &copy; 2021 All Rights Reserved CUBRe</p>
+     <p>Copyright &copy; ${new Date().getFullYear()} All Rights Reserved CUBRe</p>
  </div>
  </div>
 </body>

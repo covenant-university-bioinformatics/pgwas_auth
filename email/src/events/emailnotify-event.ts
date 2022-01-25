@@ -6,6 +6,7 @@ export enum emailType {
   approvedUser = "approvedUser",
   informAdmin = "informAdmin",
   jobStatus = "jobStatus",
+  forgotPassword = "forgotPassword"
 }
 
 export type EmailFormat = {

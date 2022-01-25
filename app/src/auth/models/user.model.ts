@@ -131,12 +131,14 @@ UserSchema.methods.validatePassword = async function (password: string) {
 //
 // };
 
+//Generate and hash password token
 UserSchema.methods.generateResetPasswordToken = function () {
   const user = this as Document<User> & User;
 
+  //Generate token
   const token = crypto.randomBytes(20).toString('hex');
 
-  //  Hash token and set to emailConfirmToken field
+  //  Hash token and set to resetPasswordToken field
   user.resetPasswordToken = crypto
     .createHash('sha256')
     .update(token) //token

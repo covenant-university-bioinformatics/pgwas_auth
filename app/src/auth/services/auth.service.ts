@@ -90,9 +90,7 @@ export class AuthService {
     }
   }
 
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto,
-  ) {
+  async signIn(authCredentialsDto: AuthCredentialsDto) {
     let user;
 
     if (authCredentialsDto.username) {
@@ -138,7 +136,9 @@ export class AuthService {
     return { user, accessToken };
   }
 
-  async confirmEmail(emailConfirmDto: EmailConfirmDto): Promise<boolean | string> {
+  async confirmEmail(
+    emailConfirmDto: EmailConfirmDto,
+  ): Promise<boolean | string> {
     const session = await this.userModel.startSession();
     session.startTransaction();
     try {
@@ -249,6 +249,7 @@ export class AuthService {
     if (updateUserDto.email) {
       token = oldUser.generateEmailToken();
       oldUser.email = updateUserDto.email;
+      // change email confirmed to false
     }
 
     //save user and ensure no duplicate records
@@ -258,7 +259,7 @@ export class AuthService {
         await this.emailConfirmPublisher.publish({
           username: oldUser.username,
           email: oldUser.email,
-          emailConfirmed: oldUser.emailConfirmed,
+          emailConfirmed: oldUser.emailConfirmed, // has to be false if it is a new email
         });
       }
       if (updateUserDto.username) {
@@ -327,22 +328,33 @@ export class AuthService {
       );
     }
 
-    //  Get reset token
-    const token = await user.generateResetPasswordToken();
-    //send event to email service to send token email to client
-    await this.emailNotifyPublisher.publish({
-      type: 'forgotPassword',
-      recipient: {
-        email: user.email,
-      },
-      payload: {
-        token, //has to be a link on the front
-        username: user.username,
-      },
-    });
+    try {
+      //  Get reset token
+      const token = await user.generateResetPasswordToken();
+      //send event to email service to send token email to client
+      await this.emailNotifyPublisher.publish({
+        type: 'forgotPassword',
+        recipient: {
+          email: user.email,
+        },
+        payload: {
+          token, //has to be a link on the front
+          username: user.username,
+        },
+      });
 
-    await user.save();
-    return user;
+      await user.save({ validateBeforeSave: false });
+    } catch (e) {
+      console.log(e);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordTokenExpire = undefined;
+      await user.save({ validateBeforeSave: false });
+      throw new InternalServerErrorException(
+        'Email could not be sent, Please try again',
+      );
+    }
+
+    return {success: true};
   }
 
   async resetPassword(

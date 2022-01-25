@@ -17,7 +17,7 @@ export const jobStatusTemplate = (data: {
         <p>Status: ${data.status}</p>
         <p>Comments:</p>
         <p>${data.comments}</p>
-        <p>Results: <a target="_blank" href="${data.link}">click here to visit</a></p>
+        <p>Results: <a target="_blank" href="${data.link}">Please click here to visit</a></p>
     ${templateFooter}
   `;
 };
