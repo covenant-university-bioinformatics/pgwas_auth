@@ -90,30 +90,69 @@ export class AuthService {
     }
   }
 
+  async resendEmailConfirm(userId: string) {
+    const session = await this.userModel.startSession();
+    session.startTransaction();
+    const user = await this.findOne(userId);
+    try {
+      const opts = { session };
+
+      const token = user.generateEmailToken();
+
+      await user.save(opts);
+
+      await this.emailNotifyPublisher.publish({
+        type: 'userRegistration',
+        recipient: {
+          email: user.email,
+        },
+        payload: {
+          token,
+          username: user.username,
+        },
+      });
+      await session.commitTransaction();
+      return {
+        success: true,
+      };
+    } catch (e) {
+      console.log(e);
+      await session.abortTransaction();
+      throw new HttpException(e.message, 400);
+    } finally {
+      session.endSession();
+    }
+  }
+
   async signIn(authCredentialsDto: AuthCredentialsDto) {
     let user;
 
-    if (authCredentialsDto.username) {
+    // console.log(authCredentialsDto);
+
+    user = await this.userModel
+      .findOne({
+        username: authCredentialsDto.credential,
+      })
+      .select('+password')
+      .select('+salt');
+
+    if (!user) {
       user = await this.userModel
         .findOne({
-          username: authCredentialsDto.username,
+          email: authCredentialsDto.credential,
         })
         .select('+password')
         .select('+salt');
     }
 
-    if (authCredentialsDto.email) {
-      user = await this.userModel
-        .findOne({
-          email: authCredentialsDto.email,
-        })
-        .select('+password');
-    }
+    // console.log(user);
+
+    // console.log("147", user);
 
     if (!user) {
-      this.logger.log(
-        `Authentication failed ${JSON.stringify(authCredentialsDto)}`,
-      );
+      // this.logger.log(
+      //   `Authentication failed ${JSON.stringify(authCredentialsDto)}`,
+      // );
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -354,7 +393,7 @@ export class AuthService {
       );
     }
 
-    return {success: true};
+    return { success: true };
   }
 
   async resetPassword(
@@ -382,12 +421,13 @@ export class AuthService {
 
   async remove(id: string) {
     const user = await this.findOne(id);
+    console.log(user);
 
-    this.userModel.deleteOne({ username: user.username });
-
+    await this.userModel.deleteOne({ username: user.username }).exec();
     await this.userDeletedPublisher.publish({
       username: user.username,
       email: user.email,
     });
+    return { success: true };
   }
 }

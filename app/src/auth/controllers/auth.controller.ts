@@ -6,10 +6,10 @@ import {
   Param,
   Post,
   Put,
-  Res,
+  Res, UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import {CookieOptions, Response} from 'express';
+import { CookieOptions, Response } from 'express';
 import { AuthRegisterDto } from '../dto/auth-register.dto';
 import { AuthService } from '../services/auth.service';
 import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
@@ -20,6 +20,7 @@ import { AuthResetPasswordDto } from '../dto/auth-reset-password.dto';
 import { ResetPasswordParamDto } from '../dto/reset-password-param.dto';
 import { AuthResetPasswordEmailDto } from '../dto/auth-reset-password-email.dto';
 import { AuthChangePasswordDto } from '../dto/auth-change-password.dto';
+import {AuthGuard} from "@nestjs/passport";
 
 @Controller('api/auth')
 export class AuthController {
@@ -53,7 +54,7 @@ export class AuthController {
 
     if (process.env.NODE_ENV === 'production') {
       options.secure = true;
-      options.sameSite = "none";
+      options.sameSite = 'none';
     }
 
     res
@@ -62,30 +63,35 @@ export class AuthController {
       .json({ user, expiresIn, accessToken: token });
   }
 
+  @UseGuards(AuthGuard())
+  @Get('/resendconfirm')
+  async resendConfirmation(@GetUser() user) {
+    return await this.authService.resendEmailConfirm(user.id);
+  }
+
   @Get('/emailconfirm/:email/:token')
   async emailConfirm(@Param() emailConfirmDto: EmailConfirmDto, @Res() res) {
     const value = await this.authService.confirmEmail(emailConfirmDto);
-    if(typeof value === "string"){
+    if (typeof value === 'string') {
       res
-          .status(200)
-          .send(
-              generalTemplate(
-                  `<strong>${value}</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>`,
-              ),
-          );
-    }
-    else{
+        .status(200)
+        .send(
+          generalTemplate(
+            `<strong>${value}</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>`,
+          ),
+        );
+    } else {
       if (value) {
         res
-            .status(200)
-            .send(
-                generalTemplate(
-                    '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>',
-                ),
-            );
+          .status(200)
+          .send(
+            generalTemplate(
+              '<strong>Email confirmation successful</strong><br/><strong>Please kindly sign in <a href="https://www.spgwas.waslitbre.org/sign_in">here</a></strong>',
+            ),
+          );
       } else {
         res.status(400).send(
-            generalTemplate(`<strong>Email confirmation not successful!<br> User with email: ${emailConfirmDto.email} has been deleted<br>
+          generalTemplate(`<strong>Email confirmation not successful!<br> User with email: ${emailConfirmDto.email} has been deleted<br>
       If this is truly your email, please re-register and confirm the email as soon as possible.<br>
       Thank you for your patience!</strong>
   `),
@@ -98,7 +104,6 @@ export class AuthController {
   async forgotPassword(
     @Body(ValidationPipe) authResetPasswordEmailDto: AuthResetPasswordEmailDto,
   ) {
-
     return await this.authService.forgotPassword(authResetPasswordEmailDto);
   }
 
@@ -118,7 +123,6 @@ export class AuthController {
     @Body(ValidationPipe) authChangePasswordDto: AuthChangePasswordDto,
     @GetUser() user,
   ) {
-
     return await this.authService.updatePassword(authChangePasswordDto, user);
   }
 

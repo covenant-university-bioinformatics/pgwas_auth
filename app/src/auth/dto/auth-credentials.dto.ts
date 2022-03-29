@@ -20,6 +20,11 @@ export class AuthCredentialsDto {
   })
   email: string;
 
+  @IsString({ message: 'Authentication failed' })
+  @MinLength(4, { message: 'Authentication failed' })
+  @MaxLength(50, { message: 'Authentication failed' })
+  credential: string;
+
   @IsString()
   @MinLength(4, { message: 'Authentication failed' })
   @MaxLength(20, { message: 'Authentication failed' })

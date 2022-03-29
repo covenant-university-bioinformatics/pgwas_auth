@@ -19,6 +19,7 @@ imageConfig:
   tag: "latest"
   pullPolicy: Always
 #change to Always
+#IfNotPresent
 #command: ['echo pre-install Job Pod is Running']
 
 replicaCount: 1
