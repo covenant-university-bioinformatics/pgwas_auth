@@ -3,10 +3,10 @@ kind: Config
 deploy:
   helm:
     releases:
-      - name: nats
-        chartPath: .\dev_depl\helm\
-        valuesFiles:
-          - .\dev_depl\helm\nats-values.yaml
+#      - name: nats
+#        chartPath: .\dev_depl\helm\
+#        valuesFiles:
+#          - .\dev_depl\helm\nats-values.yaml
       - name: auth
         chartPath: .\dev_depl\helm\
         valuesFiles:
