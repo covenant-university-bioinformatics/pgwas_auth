@@ -73,8 +73,8 @@ export class UsersController {
     }
   }
 
+  // @Roles(UserRoles.ADMIN)
   @Delete(':id')
-  @Roles(UserRoles.ADMIN)
   remove(@Param('id') id: string) {
     return this.authService.remove(id);
   }
