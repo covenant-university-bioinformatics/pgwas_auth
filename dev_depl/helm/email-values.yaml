@@ -70,6 +70,16 @@ environment:
       secretKeyRef:
         name: mg-secret
         key: MG_KEY
+  - name: MJ_APIKEY_PUBLIC
+    valueFrom:
+      secretKeyRef:
+        name: mj-secret
+        key: MJ_APIKEY_PUBLIC
+  - name: MJ_APIKEY_PRIVATE
+    valueFrom:
+      secretKeyRef:
+        name: mj-secret
+        key: MJ_APIKEY_PRIVATE
 
   #  - name: REDIS_HOST
   #    valueFrom:
@@ -131,7 +141,12 @@ initContainers:
   init:
     name: checkservice
     image: busybox:1.28
-    command: [ 'sh', '-c', "until nslookup personnel-postgres-database-svc-web.dbs; do echo waiting for postgresdb service; sleep 2; done" ]
+    command:
+      [
+        "sh",
+        "-c",
+        "until nslookup personnel-postgres-database-svc-web.dbs; do echo waiting for postgresdb service; sleep 2; done",
+      ]
   createdb:
     name: createdb
     image: governmentpaas/psql
